@@ -37,7 +37,13 @@ class HomeFragment : Fragment() {
                 list = response.body()!!
                 val adapter = BooksAdapter(list,object :BooksAdapter.OnClickBook{
                     override fun onClickRoman(book: Book) {
-                        Toast.makeText(requireContext(), "Don't rush", Toast.LENGTH_SHORT).show()
+                        var bundle = Bundle()
+                        var detail = DetailFragment()
+                        bundle.putInt("id", book.id)
+                        detail.arguments = bundle
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.main, detail)
+                            .commit()
                     }
                 })
                 binding.allbooksrecyle.adapter = adapter
