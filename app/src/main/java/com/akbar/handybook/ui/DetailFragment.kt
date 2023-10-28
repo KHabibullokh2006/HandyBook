@@ -1,12 +1,16 @@
 package com.akbar.handybook.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.akbar.handybook.R
 import com.akbar.handybook.databinding.FragmentDetailBinding
+import com.akbar.handybook.networking.APIClient
+import com.akbar.handybook.networking.APIService
+import com.google.android.material.tabs.TabLayout
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,8 +40,48 @@ class DetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentDetailBinding.inflate(inflater, container, false)
-        binding.text.text = id.toString()
+        val api = APIClient.getInstance().create(APIService::class.java)
+
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("E-Kitob"),true)
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio Kitob"))
+        binding.tabLayout.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                setCurrentTabFragment(tab!!.position)
+                Log.d("AAA", tab.position.toString())
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+        })
+
+
+        binding.back.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.main, MainFragment())
+                .commit()
+        }
+
         return binding.root
+    }
+
+    fun setCurrentTabFragment(position: Int) {
+        when(position){
+            0->{
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, EBookFragment())
+                    .commit()
+            }
+            1->{
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, AudioBookFragment())
+                    .commit()
+            }
+        }
     }
 
     companion object {
