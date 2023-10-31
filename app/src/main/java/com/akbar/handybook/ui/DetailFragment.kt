@@ -25,13 +25,11 @@ private const val ARG_PARAM2 = "param2"
 class DetailFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var id: Int = 0
-    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             id = it.getInt("id")
-            param2 = it.getString(ARG_PARAM2)
         }
     }
 
@@ -42,11 +40,17 @@ class DetailFragment : Fragment() {
         val binding = FragmentDetailBinding.inflate(inflater, container, false)
         val api = APIClient.getInstance().create(APIService::class.java)
 
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("E-Kitob"),true)
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio Kitob"))
+        var bundle = Bundle()
+        bundle.putInt("id",id)
+
+
+        var ebook = EBookFragment()
+        ebook.arguments = bundle
+        setCurrentTabFragment(0,bundle)
+
         binding.tabLayout.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                setCurrentTabFragment(tab!!.position)
+                setCurrentTabFragment(tab!!.position, bundle)
                 Log.d("AAA", tab.position.toString())
             }
 
@@ -69,16 +73,20 @@ class DetailFragment : Fragment() {
         return binding.root
     }
 
-    fun setCurrentTabFragment(position: Int) {
+    fun setCurrentTabFragment(position: Int, bundle: Bundle) {
         when(position){
             0->{
+                var ebook = EBookFragment()
+                ebook.arguments = bundle
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, EBookFragment())
+                    .replace(R.id.frame_container, ebook)
                     .commit()
             }
             1->{
+                var audiobook = AudioBookFragment()
+                audiobook.arguments = bundle
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, AudioBookFragment())
+                    .replace(R.id.frame_container, audiobook)
                     .commit()
             }
         }

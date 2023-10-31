@@ -13,6 +13,6 @@ interface APIService {
     @GET("/book-api/all-category")
     fun getAllCategories():Call<List<Book>>
 
-    @GET("/book-api")
-    fun getBookById(@Query("view") id: Int): Call<Book>
+    @GET("/book-api/view")
+    fun getBookById(@Query("id") id: Int): Call<Book>
 }
